@@ -19,6 +19,9 @@
   size_t nlines;                                                               \
   const char** lines = readlines(argv[2], &nlines);
 
+#define MIN(a, b) ((a) < (b)) ? (a) : (b)
+#define MAX(a, b) ((a) > (b)) ? (a) : (b)
+
 const char** readlines(const char* filename, size_t* nlines);
 void freelines(const char** lines);
 

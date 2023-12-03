@@ -76,11 +76,70 @@ void part1(const char** lines, size_t nlines) {
   regfree(&draw_re);
 }
 
+void part2(const char** lines, size_t nlines) {
+  regex_t start_re;
+  if (regcomp(&start_re, "Game ([0-9]+): ", REG_EXTENDED) != 0) {
+    fprintf(stderr, "Failed to compile regex\n");
+    exit(1);
+  }
+  regex_t draw_re;
+  if (regcomp(&draw_re, "([0-9]+) (red|green|blue)", REG_EXTENDED) != 0) {
+    fprintf(stderr, "Failed to compile regex\n");
+    exit(1);
+  }
+
+  int power_sum = 0;
+  regmatch_t start_matches[2];
+  for (size_t l = 0; l < nlines; l++) {
+    if (regexec(&start_re, lines[l], 2, start_matches, 0) == REG_NOMATCH) {
+      fprintf(stderr, "Couldn't find game ID in `%s'\n", lines[l]);
+      exit(1);
+    }
+
+    char* draws_str = strdup(lines[l] + start_matches[0].rm_eo);
+    char* draw = strtok(draws_str, ";");
+    int min_red = 0, min_green = 0, min_blue = 0;
+    while (draw != NULL) {
+      size_t nmatches;
+      regmatch_t* matches =
+          re_match_all_subgroups(&draw_re, draw, 3, &nmatches, 0);
+      for (size_t i = 0; i < nmatches; i++) {
+        char* num_str = re_match_dup(draw, &matches[i * 3 + 1]);
+        char* color = re_match_dup(draw, &matches[i * 3 + 2]);
+
+        int num = atoi(num_str);
+        if (strcmp(color, "red") == 0) {
+          min_red = MAX(min_red, num);
+        } else if (strcmp(color, "green") == 0) {
+          min_green = MAX(min_green, num);
+        } else if (strcmp(color, "blue") == 0) {
+          min_blue = MAX(min_blue, num);
+        }
+
+        free(num_str);
+        free(color);
+      }
+      free(matches);
+
+      draw = strtok(NULL, ";");
+    }
+    free(draws_str);
+    power_sum += min_red * min_green * min_blue;
+  }
+
+  printf("Sum of powers: %d\n", power_sum);
+
+  regfree(&start_re);
+  regfree(&draw_re);
+}
+
 int main(int argc, char** argv) {
   MAIN_BOILERPLATE
 
   if (part == 1) {
     part1(lines, nlines);
+  } else if (part == 2) {
+    part2(lines, nlines);
   } else {
     usage_abrt(argv[0]);
   }
