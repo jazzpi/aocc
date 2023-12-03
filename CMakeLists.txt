@@ -11,3 +11,4 @@ add_library(aocutil src/util.c)
 link_libraries(aocutil)
 
 add_executable(day1 src/day1.c)
+add_executable(day2 src/day2.c)

@@ -26,4 +26,7 @@ __attribute__((noreturn)) void usage_abrt(char* progname);
 
 regmatch_t* re_match_all(const regex_t* re, const char* str, size_t* nmatches,
                          int overlapping_matches);
+regmatch_t* re_match_all_subgroups(const regex_t* re, const char* str,
+                                   size_t nmatches_per_re, size_t* nmatches,
+                                   int overlapping_matches);
 char* re_match_dup(const char* source_str, const regmatch_t* match);
