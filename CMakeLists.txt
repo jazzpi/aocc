@@ -7,6 +7,7 @@ add_compile_options(-g -Og -fsanitize=address -Wall -Wextra)
 add_link_options(-fsanitize=address)
 include_directories(include)
 
+add_subdirectory(test)
 
 add_library(aocc
     src/util.c
