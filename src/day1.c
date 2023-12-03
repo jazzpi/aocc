@@ -5,13 +5,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void part1(const char **lines, size_t nlines) {
+void part1(const char** lines, size_t nlines) {
   int sum = 0;
   for (size_t l = 0; l < nlines; l++) {
     char d1 = 0;
     char d2 = 0;
 
-    const char *c = lines[l];
+    const char* c = lines[l];
     while (*c != 0) {
       if (*c >= '0' && *c <= '9') {
         if (d1 == 0) {
@@ -28,7 +28,7 @@ void part1(const char **lines, size_t nlines) {
   printf("Calibration: %d\n", sum);
 }
 
-int part2_digit(const char *digit_str) {
+int part2_digit(const char* digit_str) {
   if (strlen(digit_str) == 1) {
     return atoi(digit_str);
   } else if (strcmp(digit_str, "one") == 0) {
@@ -55,7 +55,7 @@ int part2_digit(const char *digit_str) {
   exit(1);
 }
 
-void part2(const char **lines, size_t nlines) {
+void part2(const char** lines, size_t nlines) {
   regex_t re;
   if (regcomp(&re, "([0-9]|one|two|three|four|five|six|seven|eight|nine)",
               REG_EXTENDED) != 0) {
@@ -66,12 +66,12 @@ void part2(const char **lines, size_t nlines) {
   int sum = 0;
   for (size_t l = 0; l < nlines; l++) {
     size_t nmatches;
-    regmatch_t *matches = re_match_all(&re, lines[l], &nmatches, 1);
+    regmatch_t* matches = re_match_all(&re, lines[l], &nmatches, 1);
     assert(nmatches > 0);
-    char *d1s = re_match_dup(lines[l], &matches[0]);
+    char* d1s = re_match_dup(lines[l], &matches[0]);
     int d1 = part2_digit(d1s);
     free(d1s);
-    char *d2s = re_match_dup(lines[l], &matches[nmatches - 1]);
+    char* d2s = re_match_dup(lines[l], &matches[nmatches - 1]);
     int d2 = part2_digit(d2s);
     free(d2s);
     free(matches);
@@ -83,7 +83,7 @@ void part2(const char **lines, size_t nlines) {
   printf("Calibration: %d\n", sum);
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
   MAIN_BOILERPLATE
   if (part == 1) {
     part1(lines, nlines);

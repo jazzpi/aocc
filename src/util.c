@@ -10,8 +10,8 @@
 
 #define FILEREAD_BUFSIZE 1024
 
-const char **readlines(const char *filename, size_t *nlines) {
-  FILE *f = fopen(filename, "r");
+const char** readlines(const char* filename, size_t* nlines) {
+  FILE* f = fopen(filename, "r");
   if (f == NULL) {
     fprintf(stderr, "Failed to open %s: %s\n", filename, strerror(errno));
     exit(1);
@@ -19,7 +19,7 @@ const char **readlines(const char *filename, size_t *nlines) {
 
   size_t chars_read = 0;
   size_t buf_size = FILEREAD_BUFSIZE;
-  char *buf = malloc(buf_size);
+  char* buf = malloc(buf_size);
   while (!feof(f) && !ferror(f)) {
     size_t remaining = buf_size - chars_read;
     if (remaining == 0) {
@@ -47,7 +47,7 @@ const char **readlines(const char *filename, size_t *nlines) {
     }
   }
 
-  const char **lines = malloc(sizeof(const char *) * *nlines);
+  const char** lines = malloc(sizeof(const char*) * *nlines);
   size_t line = 0;
   size_t line_begin = 0;
   size_t i = 0;
@@ -63,31 +63,31 @@ const char **readlines(const char *filename, size_t *nlines) {
   return lines;
 }
 
-void freelines(const char **lines) {
+void freelines(const char** lines) {
   // The lines pointers simply point into the file buffer (where newlines have
   // been replaced by NULs), so the first line pointer just points to the file
   // buffer.
-  free((void *)lines[0]);
+  free((void*)lines[0]);
   free(lines);
 }
 
-void usage_abrt(char *progname) {
+void usage_abrt(char* progname) {
   fprintf(stderr, "Usage: %s p1|p2 <input file>\n", progname);
   exit(EX_USAGE);
 }
 
-regmatch_t *re_match_all(const regex_t *re, const char *str, size_t *nmatches,
+regmatch_t* re_match_all(const regex_t* re, const char* str, size_t* nmatches,
                          int overlapping_matches) {
   *nmatches = 0;
   size_t buf_size = 2;
-  regmatch_t *matches = malloc(sizeof(*matches) * buf_size);
+  regmatch_t* matches = malloc(sizeof(*matches) * buf_size);
   size_t str_offset = 0;
 
   while (str[str_offset] != '\0' &&
          regexec(re, str + str_offset, 1, &matches[*nmatches], 0) == 0) {
     matches[*nmatches].rm_so += str_offset;
     matches[*nmatches].rm_eo += str_offset;
-    char *matchstr = re_match_dup(str, &matches[*nmatches]);
+    char* matchstr = re_match_dup(str, &matches[*nmatches]);
     free(matchstr);
     if (overlapping_matches) {
       str_offset = matches[*nmatches].rm_so + 1;
@@ -105,6 +105,6 @@ regmatch_t *re_match_all(const regex_t *re, const char *str, size_t *nmatches,
   return matches;
 }
 
-char *re_match_dup(const char *source_str, const regmatch_t *match) {
+char* re_match_dup(const char* source_str, const regmatch_t* match) {
   return strndup(source_str + match->rm_so, match->rm_eo - match->rm_so);
 }
