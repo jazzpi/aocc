@@ -2,6 +2,7 @@
 
 #include <assert.h>
 #include <errno.h>
+#include <regex.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -73,4 +74,37 @@ void freelines(const char **lines) {
 void usage_abrt(char *progname) {
   fprintf(stderr, "Usage: %s p1|p2 <input file>\n", progname);
   exit(EX_USAGE);
+}
+
+regmatch_t *re_match_all(const regex_t *re, const char *str, size_t *nmatches,
+                         int overlapping_matches) {
+  *nmatches = 0;
+  size_t buf_size = 2;
+  regmatch_t *matches = malloc(sizeof(*matches) * buf_size);
+  size_t str_offset = 0;
+
+  while (str[str_offset] != '\0' &&
+         regexec(re, str + str_offset, 1, &matches[*nmatches], 0) == 0) {
+    matches[*nmatches].rm_so += str_offset;
+    matches[*nmatches].rm_eo += str_offset;
+    char *matchstr = re_match_dup(str, &matches[*nmatches]);
+    free(matchstr);
+    if (overlapping_matches) {
+      str_offset = matches[*nmatches].rm_so + 1;
+    } else {
+      str_offset = matches[*nmatches].rm_eo;
+    }
+
+    *nmatches += 1;
+    if (*nmatches == buf_size) {
+      buf_size *= 2;
+      matches = realloc(matches, sizeof(*matches) * buf_size);
+    }
+  }
+
+  return matches;
+}
+
+char *re_match_dup(const char *source_str, const regmatch_t *match) {
+  return strndup(source_str + match->rm_so, match->rm_eo - match->rm_so);
 }

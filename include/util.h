@@ -1,5 +1,6 @@
 #pragma once
 
+#include <regex.h>
 #include <stddef.h>
 #include <string.h>
 
@@ -22,3 +23,7 @@ const char **readlines(const char *filename, size_t *nlines);
 void freelines(const char **lines);
 
 __attribute__((noreturn)) void usage_abrt(char *progname);
+
+regmatch_t *re_match_all(const regex_t *re, const char *str, size_t *nmatches,
+                         int overlapping_matches);
+char *re_match_dup(const char *source_str, const regmatch_t *match);
