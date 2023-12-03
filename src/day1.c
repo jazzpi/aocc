@@ -1,4 +1,5 @@
 #include "day1.h"
+#include "re.h"
 #include "util.h"
 
 #include <assert.h>
@@ -67,15 +68,11 @@ int day1_part2(const char** lines, size_t nlines) {
   int sum = 0;
   for (size_t l = 0; l < nlines; l++) {
     size_t nmatches;
-    regmatch_t* matches = re_match_all(&re, lines[l], &nmatches, 1);
+    re_match_t* matches = re_match_all(&re, lines[l], &nmatches, 1);
     assert(nmatches > 0);
-    char* d1s = re_match_dup(lines[l], &matches[0]);
-    int d1 = part2_digit(d1s);
-    free(d1s);
-    char* d2s = re_match_dup(lines[l], &matches[nmatches - 1]);
-    int d2 = part2_digit(d2s);
-    free(d2s);
-    free(matches);
+    int d1 = part2_digit(matches[0].groups[0].str);
+    int d2 = part2_digit(matches[nmatches - 1].groups[0].str);
+    re_free_matches(matches, nmatches);
     sum += d1 * 10 + d2;
   }
 

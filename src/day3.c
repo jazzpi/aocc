@@ -1,3 +1,4 @@
+#include "re.h"
 #include "util.h"
 
 #include <assert.h>
@@ -5,9 +6,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int is_part_number(size_t line_no, regmatch_t* match, const char** lines,
+int is_part_number(size_t line_no, re_group_t* match, const char** lines,
                    size_t nlines, int linelen) {
-  int start_check = match->rm_so;
+  int start_check = match->start;
   if (start_check != 0) {
     start_check--;
     // Check left of number
@@ -15,7 +16,7 @@ int is_part_number(size_t line_no, regmatch_t* match, const char** lines,
       return 1;
     }
   }
-  int end_check = match->rm_eo - 1;
+  int end_check = match->start + match->len - 1;
   if (end_check != linelen - 1) {
     end_check++;
     // Check right of number
@@ -68,12 +69,11 @@ part_no* find_part_numbers(const char** lines, size_t nlines, size_t* n_parts) {
   for (size_t l = 0; l < nlines; l++) {
     assert(strlen(lines[l]) == linelen);
     size_t nmatches;
-    regmatch_t* matches = re_match_all(&re, lines[l], &nmatches, 0);
+    re_match_t* matches = re_match_all(&re, lines[l], &nmatches, 0);
     for (size_t n = 0; n < nmatches; n++) {
-      if (is_part_number(l, &matches[n], lines, nlines, linelen)) {
-        char* str = re_match_dup(lines[l], &matches[n]);
-        int value = atoi(str);
-        free(str);
+      re_group_t* match = &matches[n].groups[0];
+      if (is_part_number(l, match, lines, nlines, linelen)) {
+        int value = atoi(match->str);
 
         if (*n_parts == buf_size) {
           buf_size *= 2;
@@ -83,12 +83,12 @@ part_no* find_part_numbers(const char** lines, size_t nlines, size_t* n_parts) {
         part_no* no = &numbers[*n_parts];
         *n_parts += 1;
         no->row = l;
-        no->start_col = matches[n].rm_so;
-        no->end_col = matches[n].rm_eo - 1;
+        no->start_col = match->start;
+        no->end_col = match->start + match->len - 1;
         no->value = value;
       }
     }
-    free(matches);
+    re_free_matches(matches, nmatches);
   }
 
   regfree(&re);

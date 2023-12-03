@@ -1,3 +1,4 @@
+#include "re.h"
 #include "util.h"
 
 #include <regex.h>
@@ -38,13 +39,11 @@ int day2_part1(const char** lines, size_t nlines) {
     char* draw = strtok(draws_str, ";");
     while (draw != NULL) {
       size_t nmatches;
-      regmatch_t* matches =
-          re_match_all_subgroups(&draw_re, draw, 3, &nmatches, 0);
+      re_match_t* matches = re_match_all(&draw_re, draw, &nmatches, 0);
       for (size_t i = 0; i < nmatches; i++) {
-        char* num_str = re_match_dup(draw, &matches[i * 3 + 1]);
-        char* color = re_match_dup(draw, &matches[i * 3 + 2]);
+        int num = atoi(matches[i].groups[1].str);
+        char* color = matches[i].groups[2].str;
 
-        int num = atoi(num_str);
         if (strcmp(color, "red") == 0 && num > MAX_RED) {
           possible = 0;
         } else if (strcmp(color, "green") == 0 && num > MAX_GREEN) {
@@ -52,11 +51,8 @@ int day2_part1(const char** lines, size_t nlines) {
         } else if (strcmp(color, "blue") == 0 && num > MAX_BLUE) {
           possible = 0;
         }
-
-        free(num_str);
-        free(color);
       }
-      free(matches);
+      re_free_matches(matches, nmatches);
 
       if (!possible) {
         break;
@@ -101,13 +97,11 @@ int day2_part2(const char** lines, size_t nlines) {
     int min_red = 0, min_green = 0, min_blue = 0;
     while (draw != NULL) {
       size_t nmatches;
-      regmatch_t* matches =
-          re_match_all_subgroups(&draw_re, draw, 3, &nmatches, 0);
+      re_match_t* matches = re_match_all(&draw_re, draw, &nmatches, 0);
       for (size_t i = 0; i < nmatches; i++) {
-        char* num_str = re_match_dup(draw, &matches[i * 3 + 1]);
-        char* color = re_match_dup(draw, &matches[i * 3 + 2]);
+        int num = atoi(matches[i].groups[1].str);
+        char* color = matches[i].groups[2].str;
 
-        int num = atoi(num_str);
         if (strcmp(color, "red") == 0) {
           min_red = MAX(min_red, num);
         } else if (strcmp(color, "green") == 0) {
@@ -115,11 +109,8 @@ int day2_part2(const char** lines, size_t nlines) {
         } else if (strcmp(color, "blue") == 0) {
           min_blue = MAX(min_blue, num);
         }
-
-        free(num_str);
-        free(color);
       }
-      free(matches);
+      re_free_matches(matches, nmatches);
 
       draw = strtok(NULL, ";");
     }

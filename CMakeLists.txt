@@ -11,6 +11,7 @@ add_subdirectory(test)
 
 add_library(aocc
     src/util.c
+    src/re.c
     src/day1.c
     src/day2.c
     src/day3.c)
