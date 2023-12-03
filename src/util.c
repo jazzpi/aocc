@@ -71,11 +71,6 @@ void freelines(const char** lines) {
   free(lines);
 }
 
-void usage_abrt(char* progname) {
-  fprintf(stderr, "Usage: %s p1|p2 <input file>\n", progname);
-  exit(EX_USAGE);
-}
-
 regmatch_t* re_match_all(const regex_t* re, const char* str, size_t* nmatches,
                          int overlapping_matches) {
   return re_match_all_subgroups(re, str, 1, nmatches, overlapping_matches);

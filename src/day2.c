@@ -9,7 +9,7 @@
 #define MAX_GREEN 13
 #define MAX_BLUE 14
 
-void part1(const char** lines, size_t nlines) {
+int day2_part1(const char** lines, size_t nlines) {
   regex_t start_re;
   if (regcomp(&start_re, "Game ([0-9]+): ", REG_EXTENDED) != 0) {
     fprintf(stderr, "Failed to compile regex\n");
@@ -70,13 +70,13 @@ void part1(const char** lines, size_t nlines) {
     }
   }
 
-  printf("Sum of possible IDs: %d\n", sum_ids);
-
   regfree(&start_re);
   regfree(&draw_re);
+
+  return sum_ids;
 }
 
-void part2(const char** lines, size_t nlines) {
+int day2_part2(const char** lines, size_t nlines) {
   regex_t start_re;
   if (regcomp(&start_re, "Game ([0-9]+): ", REG_EXTENDED) != 0) {
     fprintf(stderr, "Failed to compile regex\n");
@@ -127,23 +127,8 @@ void part2(const char** lines, size_t nlines) {
     power_sum += min_red * min_green * min_blue;
   }
 
-  printf("Sum of powers: %d\n", power_sum);
-
   regfree(&start_re);
   regfree(&draw_re);
-}
 
-int main(int argc, char** argv) {
-  MAIN_BOILERPLATE
-
-  if (part == 1) {
-    part1(lines, nlines);
-  } else if (part == 2) {
-    part2(lines, nlines);
-  } else {
-    usage_abrt(argv[0]);
-  }
-
-  freelines(lines);
-  return 0;
+  return power_sum;
 }

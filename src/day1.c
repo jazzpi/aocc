@@ -1,3 +1,4 @@
+#include "day1.h"
 #include "util.h"
 
 #include <assert.h>
@@ -5,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void part1(const char** lines, size_t nlines) {
+int day1_part1(const char** lines, size_t nlines) {
   int sum = 0;
   for (size_t l = 0; l < nlines; l++) {
     char d1 = 0;
@@ -25,7 +26,7 @@ void part1(const char** lines, size_t nlines) {
     char num[] = {d1, d2, 0};
     sum += atoi(num);
   }
-  printf("Calibration: %d\n", sum);
+  return sum;
 }
 
 int part2_digit(const char* digit_str) {
@@ -55,7 +56,7 @@ int part2_digit(const char* digit_str) {
   exit(1);
 }
 
-void part2(const char** lines, size_t nlines) {
+int day1_part2(const char** lines, size_t nlines) {
   regex_t re;
   if (regcomp(&re, "([0-9]|one|two|three|four|five|six|seven|eight|nine)",
               REG_EXTENDED) != 0) {
@@ -80,19 +81,5 @@ void part2(const char** lines, size_t nlines) {
 
   regfree(&re);
 
-  printf("Calibration: %d\n", sum);
-}
-
-int main(int argc, char** argv) {
-  MAIN_BOILERPLATE
-  if (part == 1) {
-    part1(lines, nlines);
-  } else if (part == 2) {
-    part2(lines, nlines);
-  } else {
-    usage_abrt(argv[0]);
-  }
-
-  freelines(lines);
-  return 0;
+  return sum;
 }

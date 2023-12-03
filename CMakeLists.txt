@@ -7,9 +7,13 @@ add_compile_options(-g -Og -fsanitize=address -Wall -Wextra)
 add_link_options(-fsanitize=address)
 include_directories(include)
 
-add_library(aocutil src/util.c)
-link_libraries(aocutil)
 
-add_executable(day1 src/day1.c)
-add_executable(day2 src/day2.c)
-add_executable(day3 src/day3.c)
+add_library(aocc
+    src/util.c
+    src/day1.c
+    src/day2.c
+    src/day3.c)
+
+add_executable(aocc_bin src/main.c)
+target_link_libraries(aocc_bin aocc)
+set_target_properties(aocc_bin PROPERTIES OUTPUT_NAME aocc)

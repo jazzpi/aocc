@@ -96,7 +96,7 @@ part_no* find_part_numbers(const char** lines, size_t nlines, size_t* n_parts) {
   return numbers;
 }
 
-void part1(const char** lines, size_t nlines) {
+int day3_part1(const char** lines, size_t nlines) {
   size_t n_parts;
   part_no* numbers = find_part_numbers(lines, nlines, &n_parts);
   size_t sum = 0;
@@ -105,7 +105,7 @@ void part1(const char** lines, size_t nlines) {
   }
   free(numbers);
 
-  printf("Sum of part numbers: %zu\n", sum);
+  return sum;
 }
 
 part_no* part_at(size_t row, size_t col, part_no* parts, size_t n_parts) {
@@ -119,7 +119,7 @@ part_no* part_at(size_t row, size_t col, part_no* parts, size_t n_parts) {
   return NULL;
 }
 
-void part2(const char** lines, size_t nlines) {
+int day3_part2(const char** lines, size_t nlines) {
   size_t n_parts;
   part_no* parts = find_part_numbers(lines, nlines, &n_parts);
 
@@ -158,19 +158,5 @@ void part2(const char** lines, size_t nlines) {
 
   free(parts);
 
-  printf("Sum of gear ratios: %d\n", sum);
-}
-
-int main(int argc, char** argv) {
-  MAIN_BOILERPLATE
-
-  if (part == 1) {
-    part1(lines, nlines);
-  } else if (part == 2) {
-    part2(lines, nlines);
-  } else {
-    usage_abrt(argv[0]);
-  }
-
-  freelines(lines);
+  return sum;
 }
