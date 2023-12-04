@@ -1,0 +1,20 @@
+name: Run tests
+
+on:
+  push:
+    branches: [$default-branch ci-testing]
+  pull_request:
+    branches: [$default-branch ci-testing]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: configure
+        run: mkdir -p build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Debug
+      - name: build
+        run: cd build && make -j4 VERBOSE=1
+      - name: test
+        run: cd build && ctest --test-dir test --output-on-failure
