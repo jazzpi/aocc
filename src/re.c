@@ -1,4 +1,5 @@
 #include "re.h"
+#include "dynarr.h"
 
 #include <regex.h>
 #include <stdio.h>
@@ -16,28 +17,23 @@ void re_compile(regex_t* re, const char* pattern) {
   }
 }
 
+typedef DYNARR(re_match_t) re_match_arr;
+
 re_match_t* re_match_all(const regex_t* re, const char* str, size_t* nmatches,
                          int overlapping_matches) {
   size_t n_groups = re->re_nsub + 1;
 
-  *nmatches = 0;
-  size_t buf_size = 2;
-  re_match_t* matches = malloc(sizeof(*matches) * buf_size);
+  re_match_arr* matches = dynarr_create(re_match_arr, 1);
   size_t str_offset = 0;
   regmatch_t group_matches[n_groups];
 
   while (str[str_offset] != '\0' &&
          regexec(re, str + str_offset, n_groups, group_matches, 0) == 0) {
-    if (*nmatches == buf_size) {
-      buf_size *= 2;
-      matches = realloc(matches, sizeof(*matches) * buf_size);
-    }
-
-    re_match_t* match = &matches[*nmatches];
+    re_match_t* match = dynarr_incsize(matches);
     match->groups = malloc(sizeof(*match->groups) * n_groups);
     for (size_t i = 0; i < n_groups; i++) {
       regmatch_t* group_match = &group_matches[i];
-      re_group_t* group = &matches[*nmatches].groups[i];
+      re_group_t* group = &match->groups[i];
       group->matched = group_match->rm_so != -1;
       if (!group->matched) {
         continue;
@@ -46,9 +42,8 @@ re_match_t* re_match_all(const regex_t* re, const char* str, size_t* nmatches,
       group->len = group_match->rm_eo - group_match->rm_so;
       group->str = strndup(str + group->start, group->len);
     }
-    matches[*nmatches].ngroups = n_groups;
+    match->ngroups = n_groups;
 
-    *nmatches += 1;
     if (overlapping_matches) {
       str_offset = match->groups[0].start + 1;
     } else {
@@ -56,8 +51,8 @@ re_match_t* re_match_all(const regex_t* re, const char* str, size_t* nmatches,
     }
   }
 
-  matches = realloc(matches, sizeof(*matches) * *nmatches);
-  return matches;
+  *nmatches = matches->size;
+  return dynarr_extract(matches);
 }
 
 void re_free_matches(re_match_t* matches, size_t nmatches) {

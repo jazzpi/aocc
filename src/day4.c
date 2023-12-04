@@ -1,4 +1,5 @@
 #include "day4.h"
+#include "dynarr.h"
 #include "re.h"
 
 #include <assert.h>
@@ -17,26 +18,22 @@ typedef struct {
   size_t n_have;
 } card;
 
+typedef DYNARR(int) int_arr;
+
 int* parse_numbers(const char* str, size_t* n) {
-  size_t buf_size = 2;
-  *n = 0;
-  int* nums = malloc(sizeof(*nums) * buf_size);
+  int_arr* nums = dynarr_create(int_arr, 1);
 
   char* str_copy = strdup(str);
   char* num_str = strtok(str_copy, " ");
   while (num_str != NULL) {
-    if (*n == buf_size) {
-      buf_size *= 2;
-      nums = realloc(nums, sizeof(*nums) * buf_size);
-    }
-    nums[*n] = atoi(num_str);
-    *n += 1;
+    int num = atoi(num_str);
+    dynarr_append(nums, &num);
     num_str = strtok(NULL, " ");
   }
 
   free(str_copy);
-  nums = realloc(nums, sizeof(*nums) * *n);
-  return nums;
+  *n = nums->size;
+  return dynarr_extract(nums);
 }
 
 void parse_card(card* c, const char* line) {

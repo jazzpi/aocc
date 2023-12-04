@@ -1,3 +1,5 @@
+#include "day3.h"
+#include "dynarr.h"
 #include "re.h"
 #include "util.h"
 
@@ -52,6 +54,7 @@ typedef struct {
   int value;
 } part_no;
 
+typedef DYNARR(part_no) part_no_arr;
 part_no* find_part_numbers(const char** lines, size_t nlines, size_t* n_parts) {
   assert(nlines > 0);
   size_t linelen = strlen(lines[0]);
@@ -62,9 +65,7 @@ part_no* find_part_numbers(const char** lines, size_t nlines, size_t* n_parts) {
     exit(1);
   }
 
-  *n_parts = 0;
-  size_t buf_size = 128;
-  part_no* numbers = malloc(sizeof(*numbers) * buf_size);
+  part_no_arr* numbers = dynarr_create(part_no_arr, 128);
 
   for (size_t l = 0; l < nlines; l++) {
     assert(strlen(lines[l]) == linelen);
@@ -75,13 +76,7 @@ part_no* find_part_numbers(const char** lines, size_t nlines, size_t* n_parts) {
       if (is_part_number(l, match, lines, nlines, linelen)) {
         int value = atoi(match->str);
 
-        if (*n_parts == buf_size) {
-          buf_size *= 2;
-          numbers = realloc(numbers, sizeof(*numbers) * buf_size);
-        }
-
-        part_no* no = &numbers[*n_parts];
-        *n_parts += 1;
+        part_no* no = dynarr_incsize(numbers);
         no->row = l;
         no->start_col = match->start;
         no->end_col = match->start + match->len - 1;
@@ -93,7 +88,8 @@ part_no* find_part_numbers(const char** lines, size_t nlines, size_t* n_parts) {
 
   regfree(&re);
 
-  return numbers;
+  *n_parts = numbers->size;
+  return dynarr_extract(numbers);
 }
 
 int day3_part1(const char** lines, size_t nlines) {
