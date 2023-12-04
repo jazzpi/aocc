@@ -2,6 +2,7 @@
 #include "re.h"
 
 #include <assert.h>
+#include <math.h>
 #include <regex.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -57,31 +58,69 @@ void parse_card(card* c, const char* line) {
   re_free_matches(match, nmatches);
 }
 
+void free_cards(card* c, size_t num_cards) {
+  for (size_t i = 0; i < num_cards; i++) {
+    free(c[i].winning);
+    free(c[i].have);
+  }
+  free(c);
+}
+
+int num_winning(card* c) {
+  int n = 0;
+  for (size_t i = 0; i < c->n_winning; i++) {
+    for (size_t j = 0; j < c->n_have; j++) {
+      if (c->winning[i] == c->have[j]) {
+        n++;
+      }
+    }
+  }
+  return n;
+}
+
 int day4_part1(const char** lines, size_t nlines) {
   int sum = 0;
 
   for (size_t l = 0; l < nlines; l++) {
-    card c;
-    parse_card(&c, lines[l]);
+    card* c = malloc(sizeof(*c));
+    parse_card(c, lines[l]);
 
-    int value = 0;
-    for (size_t i = 0; i < c.n_winning; i++) {
-      for (size_t j = 0; j < c.n_have; j++) {
-        if (c.winning[i] == c.have[j]) {
-          if (value == 0) {
-            value = 1;
-          } else {
-            value *= 2;
-          }
-        }
-      }
+    int n = num_winning(c);
+    if (n > 0) {
+      sum += exp2(num_winning(c) - 1);
     }
 
-    sum += value;
-
-    free(c.winning);
-    free(c.have);
+    free_cards(c, 1);
   }
 
   return sum;
+}
+
+int day4_part2(const char** lines, size_t nlines) {
+  card* cards = malloc(sizeof(*cards) * nlines);
+  int* card_insts = malloc(sizeof(*card_insts) * nlines);
+
+  for (size_t l = 0; l < nlines; l++) {
+    parse_card(&cards[l], lines[l]);
+    card_insts[l] = 1;
+  }
+
+  int num_cards = 0;
+  for (size_t l = 0; l < nlines; l++) {
+    num_cards += card_insts[l];
+
+    int n = num_winning(&cards[l]);
+    for (int i = 0; i < n; i++) {
+      size_t idx = l + i + 1;
+      if (idx >= nlines) {
+        break;
+      }
+      card_insts[idx] += card_insts[l];
+    }
+  }
+
+  free_cards(cards, nlines);
+  free(card_insts);
+
+  return num_cards;
 }
