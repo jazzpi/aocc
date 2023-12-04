@@ -14,7 +14,9 @@ add_library(aocc
     src/re.c
     src/day1.c
     src/day2.c
-    src/day3.c)
+    src/day3.c
+    src/day4.c
+)
 
 add_executable(aocc_bin src/main.c)
 target_link_libraries(aocc_bin aocc)

@@ -1,6 +1,7 @@
 #include "day1.h"
 #include "day2.h"
 #include "day3.h"
+#include "day4.h"
 #include "util.h"
 
 #include <stdio.h>
@@ -12,6 +13,12 @@ __attribute__((noreturn)) void usage_abrt(char* progname) {
   exit(EX_USAGE);
 }
 
+typedef int (*solver_t)(const char**, size_t);
+static solver_t solvers[][2] = {{day1_part1, day1_part2},
+                                {day2_part1, day2_part2},
+                                {day3_part1, day3_part2},
+                                {day4_part1, day4_part1}};
+
 int main(int argc, char** argv) {
   if (argc != 4) {
     usage_abrt(argv[0]);
@@ -21,20 +28,10 @@ int main(int argc, char** argv) {
   if (part < 1 || part > 2) {
     usage_abrt(argv[0]);
   }
-  int (*solver)(const char** lines, size_t nlines);
-  switch (day) {
-  case 1:
-    solver = (part == 1) ? day1_part1 : day1_part2;
-    break;
-  case 2:
-    solver = (part == 1) ? day2_part1 : day2_part2;
-    break;
-  case 3:
-    solver = (part == 1) ? day3_part1 : day3_part2;
-    break;
-  default:
+  if (day < 1 || ((size_t)day) > sizeof(solvers) / sizeof(*solvers)) {
     usage_abrt(argv[0]);
   }
+  solver_t solver = solvers[day - 1][part - 1];
 
   size_t nlines;
   const char** lines = readlines(argv[3], &nlines);
