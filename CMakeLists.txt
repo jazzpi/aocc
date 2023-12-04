@@ -3,7 +3,7 @@ project(AoCC)
 
 set(CMAKE_C_STANDARD 99)
 
-add_compile_options(-g -Og -fsanitize=address -Wall -Wextra)
+add_compile_options(-g -O0 -fsanitize=address -Wall -Wextra)
 add_link_options(-fsanitize=address)
 include_directories(include)
 
