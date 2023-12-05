@@ -34,7 +34,12 @@ void dynarr_free_handle(dynarr_handle_t* arr) {
 
 void* dynarr_extract_handle(dynarr_handle_t* arr) {
   void* data = arr->data;
-  data = realloc(data, arr->size * arr->data_size);
+  if (arr->data_size == 0) {
+    free(data);
+    data = NULL;
+  } else {
+    data = realloc(data, arr->size * arr->data_size);
+  }
   free(arr);
   return data;
 }
