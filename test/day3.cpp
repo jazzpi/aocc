@@ -12,7 +12,7 @@ TEST(Day3Test, Part1Example) {
 TEST(Day3Test, Part1Input) {
   InputFile in("day3");
   int result = day3_part1(in.lines, in.nlines);
-  EXPECT_EQ(result, 530849);
+  EXPECT_EQ(result, get_solution(3, 1));
 }
 
 TEST(Day3Test, Part2Example) {
@@ -24,5 +24,5 @@ TEST(Day3Test, Part2Example) {
 TEST(Day3Test, Part2Input) {
   InputFile in("day3");
   int result = day3_part2(in.lines, in.nlines);
-  EXPECT_EQ(result, 84900879);
+  EXPECT_EQ(result, get_solution(3, 2));
 }

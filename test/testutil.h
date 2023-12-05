@@ -10,3 +10,5 @@ public:
   const char** lines;
   size_t nlines;
 };
+
+int get_solution(int day, int part);
