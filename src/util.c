@@ -1,7 +1,10 @@
 #include "util.h"
 
+#include "dynarr.h"
+
 #include <assert.h>
 #include <errno.h>
+#include <limits.h>
 #include <regex.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -69,4 +72,20 @@ void freelines(const char** lines) {
   // buffer.
   free((void*)lines[0]);
   free(lines);
+}
+
+typedef DYNARR(int) int_arr;
+
+int* parse_ints(const char* str, size_t* n) {
+  int_arr* arr = dynarr_create(int_arr, 1);
+  const char* ptr = str;
+  while (*ptr != 0) {
+    long num = strtol(ptr, (char**)&ptr, 10);
+    assert(num >= INT_MIN && num <= INT_MAX);
+    int num_int = num;
+    dynarr_append(arr, &num_int);
+  }
+
+  *n = arr->size;
+  return dynarr_extract(arr);
 }

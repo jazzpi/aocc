@@ -26,6 +26,19 @@ const char** readlines(const char* filename, size_t* nlines);
  */
 void freelines(const char** lines);
 
+/**
+ * Parse a space-separated list of integers.
+ *
+ * The integers may be separated by multiple space characters.
+ *
+ * @param str The string to parse.
+ * @param n The number of integers parsed is written to this pointer.
+ *
+ * @return An array of integers. NULL if no integers were read. Must be freed
+ * with free() otherwise.
+ */
+int* parse_ints(const char* str, size_t* n);
+
 #ifdef __cplusplus
 }
 #endif
