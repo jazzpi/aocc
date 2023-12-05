@@ -1,4 +1,4 @@
-# Advent of Code 2023, C Edition
+# Advent of Code 2023, masoChist Edition
 
 Because *real* Fak IV programmers use C.
 
