@@ -42,6 +42,15 @@ void* dynarr_incsize_handle(dynarr_handle_t* arr);
   (typeof(ARR->data))dynarr_incsize_handle((dynarr_handle_t*)ARR)
 
 /**
+ * Increase the size of the array by n elements.
+ *
+ * @return A pointer to the first new element.
+ */
+void* dynarr_incsize_n_handle(dynarr_handle_t* arr, size_t n);
+#define dynarr_incsize_n(ARR, N)                                               \
+  (typeof(ARR->data))dynarr_incsize_n_handle((dynarr_handle_t*)ARR, N)
+
+/**
  * Append an element to the end of the array.
  *
  * Increases the size of the array by one element and copies the given item into
@@ -50,6 +59,13 @@ void* dynarr_incsize_handle(dynarr_handle_t* arr);
 void dynarr_append_handle(dynarr_handle_t* arr, const void* item);
 #define dynarr_append(ARR, ITEM)                                               \
   dynarr_append_handle((dynarr_handle_t*)ARR, ITEM)
+
+/**
+ * Extend the array with the given array.
+ */
+void dynarr_extend_handle(dynarr_handle_t* dest, const dynarr_handle_t* src);
+#define dynarr_extend(DEST, SRC)                                               \
+  dynarr_extend_handle((dynarr_handle_t*)DEST, (dynarr_handle_t*)SRC)
 
 /**
  * Free the memory used by the array (handle and data).

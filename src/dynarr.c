@@ -1,5 +1,6 @@
 #include "dynarr.h"
 
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -14,17 +15,28 @@ dynarr_handle_t* dynarr_create_handle(size_t data_size,
 }
 
 void* dynarr_incsize_handle(dynarr_handle_t* arr) {
-  if (arr->size == arr->capacity) {
+  return dynarr_incsize_n_handle(arr, 1);
+}
+
+void* dynarr_incsize_n_handle(dynarr_handle_t* arr, size_t n) {
+  assert(arr->capacity > 0);
+  while (arr->size + n > arr->capacity) {
     arr->capacity *= 2;
     arr->data = realloc(arr->data, arr->data_size * arr->capacity);
   }
-  arr->size += 1;
-  return &arr->data[(arr->size - 1) * arr->data_size];
+  arr->size += n;
+  return arr->data + ((arr->size - n) * arr->data_size);
 }
 
 void dynarr_append_handle(dynarr_handle_t* arr, const void* item) {
   void* dest = dynarr_incsize_handle(arr);
   memcpy(dest, item, arr->data_size);
+}
+
+void dynarr_extend_handle(dynarr_handle_t* dest, const dynarr_handle_t* src) {
+  assert(dest->data_size == src->data_size);
+  void* dest_data = dynarr_incsize_n_handle(dest, src->size);
+  memcpy(dest_data, src->data, src->size * src->data_size);
 }
 
 void dynarr_free_handle(dynarr_handle_t* arr) {
