@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 #include <vector>
 
-void compare_parse_ints_result(const std::vector<int>& expected, int* actual,
+void compare_parse_ints_result(const std::vector<long>& expected, long* actual,
                                size_t n_actual) {
   EXPECT_EQ(expected.size(), n_actual);
   for (size_t i = 0; i < n_actual; i++) {
@@ -13,7 +13,7 @@ void compare_parse_ints_result(const std::vector<int>& expected, int* actual,
 
 TEST(UtilTest, ParseInts) {
   size_t nints;
-  int* actual;
+  long* actual;
 
   actual = parse_ints("1 2 3 4 5", &nints);
   compare_parse_ints_result({1, 2, 3, 4, 5}, actual, nints);
@@ -25,6 +25,10 @@ TEST(UtilTest, ParseInts) {
 
   actual = parse_ints("1 -2 +3 -4", &nints);
   compare_parse_ints_result({1, -2, 3, -4}, actual, nints);
+  free(actual);
+
+  actual = parse_ints("4294967296", &nints);
+  compare_parse_ints_result({4294967296L}, actual, nints);
   free(actual);
 
   actual = parse_ints("", &nints);

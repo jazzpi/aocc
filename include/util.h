@@ -37,7 +37,7 @@ void freelines(const char** lines);
  * @return An array of integers. NULL if no integers were read. Must be freed
  * with free() otherwise.
  */
-int* parse_ints(const char* str, size_t* n);
+long* parse_ints(const char* str, size_t* n);
 
 #ifdef __cplusplus
 }

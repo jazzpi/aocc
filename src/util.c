@@ -74,16 +74,17 @@ void freelines(const char** lines) {
   free(lines);
 }
 
-typedef DYNARR(int) int_arr;
-
-int* parse_ints(const char* str, size_t* n) {
-  int_arr* arr = dynarr_create(int_arr, 1);
+typedef DYNARR(long) long_arr;
+long* parse_ints(const char* str, size_t* n) {
+  long_arr* arr = dynarr_create(long_arr, 1);
   const char* ptr = str;
+  errno = 0;
   while (*ptr != 0) {
-    long num = strtol(ptr, (char**)&ptr, 10);
-    assert(num >= INT_MIN && num <= INT_MAX);
-    int num_int = num;
-    dynarr_append(arr, &num_int);
+    char* endptr;
+    long num = strtol(ptr, &endptr, 10);
+    assert(errno == 0);
+    ptr = endptr;
+    dynarr_append(arr, &num);
   }
 
   *n = arr->size;
