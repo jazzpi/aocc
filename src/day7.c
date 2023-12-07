@@ -39,25 +39,27 @@ typedef struct {
 typedef enum { JACK, JOKER } j_mode_t;
 static j_mode_t j_mode;
 
-hand_type get_type_jack(const int* counts) {
-  int pairs = 0;
-  int threes = 0;
-  for (size_t i = 0; i < 13; i++) {
-    switch (counts[i]) {
-    case 2:
-      pairs++;
-      break;
-    case 3:
-      threes++;
-      break;
-    case 4:
-      return FOUR_OF_A_KIND;
-    case 5:
-      return FIVE_OF_A_KIND;
-    }
+hand_type apply_joker(hand_type pre) {
+  switch (pre) {
+  case HIGH_CARD:
+    return ONE_PAIR;
+  case ONE_PAIR:
+    return THREE_OF_A_KIND;
+  case TWO_PAIR:
+    return FULL_HOUSE;
+  case THREE_OF_A_KIND:
+    return FOUR_OF_A_KIND;
+  case FOUR_OF_A_KIND:
+    return FIVE_OF_A_KIND;
+  default:
+    assert(0);
   }
+}
 
-  if (threes == 1 && pairs == 1) {
+hand_type get_type_jack(int pairs, int threes, int fours) {
+  if (fours == 1) {
+    return FOUR_OF_A_KIND;
+  } else if (threes == 1 && pairs == 1) {
     return FULL_HOUSE;
   } else if (threes == 1) {
     return THREE_OF_A_KIND;
@@ -70,12 +72,17 @@ hand_type get_type_jack(const int* counts) {
   }
 }
 
-hand_type get_type_joker(const int* counts) {
+hand_type get_type(const card_t* cards) {
+  int counts[13] = {0};
+  for (size_t i = 0; i < 5; i++) {
+    counts[cards[i]]++;
+  }
+
   int pairs = 0;
   int threes = 0;
   int fours = 0;
   for (size_t i = 0; i < 13; i++) {
-    if (i == J) {
+    if (j_mode == JOKER && i == J) {
       continue;
     }
     switch (counts[i]) {
@@ -93,69 +100,17 @@ hand_type get_type_joker(const int* counts) {
     }
   }
 
-  if (threes == 1 && pairs == 1) {
-    return FULL_HOUSE;
-  } else if (fours == 1) {
-    if (counts[J] == 1) {
-      return FIVE_OF_A_KIND;
-    } else {
-      return FOUR_OF_A_KIND;
-    }
-  } else if (threes == 1) {
-    switch (counts[J]) {
-    case 0:
-      return THREE_OF_A_KIND;
-    case 1:
-      return FOUR_OF_A_KIND;
-    case 2:
+  hand_type t = get_type_jack(pairs, threes, fours);
+  if (j_mode == JOKER) {
+    if (counts[J] == 5) {
+      // Edge case -- we can't increment high card 5 times
       return FIVE_OF_A_KIND;
     }
-  } else if (pairs == 2) {
-    if (counts[J] == 0) {
-      return TWO_PAIR;
-    } else {
-      return FULL_HOUSE;
-    }
-  } else if (pairs == 1) {
-    switch (counts[J]) {
-    case 0:
-      return ONE_PAIR;
-    case 1:
-      return THREE_OF_A_KIND;
-    case 2:
-      return FOUR_OF_A_KIND;
-    case 3:
-      return FIVE_OF_A_KIND;
-    }
-  } else {
-    switch (counts[J]) {
-    case 0:
-      return HIGH_CARD;
-    case 1:
-      return ONE_PAIR;
-    case 2:
-      return THREE_OF_A_KIND;
-    case 3:
-      return FOUR_OF_A_KIND;
-    case 4:
-    case 5:
-      return FIVE_OF_A_KIND;
+    for (int i = 0; i < counts[J]; i++) {
+      t = apply_joker(t);
     }
   }
-  assert(0);
-}
-
-hand_type get_type(const card_t* cards) {
-  int counts[13] = {0};
-  for (size_t i = 0; i < 5; i++) {
-    counts[cards[i]]++;
-  }
-
-  if (j_mode == JACK) {
-    return get_type_jack(counts);
-  } else {
-    return get_type_joker(counts);
-  }
+  return t;
 }
 
 hand* parse_hands(const char** lines, size_t nlines) {
