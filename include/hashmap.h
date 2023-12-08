@@ -31,6 +31,9 @@ void hashmap_set(hashmap_t* map, const void* key, const void* value);
 const void* hashmap_get(hashmap_t* map, const void* key);
 void hashmap_remove(hashmap_t* map, const void* key);
 
+typedef void (*hashmap_apply_t)(const void* key, void* value);
+void hashmap_foreach(hashmap_t* map, hashmap_apply_t apply_fn);
+
 #ifdef __cplusplus
 }
 #endif

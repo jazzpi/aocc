@@ -141,3 +141,14 @@ void hashmap_remove(hashmap_t* map, const void* key) {
     }
   }
 }
+
+void hashmap_foreach(hashmap_t* map, hashmap_apply_t apply_fn) {
+  for (size_t i = 0; i < map->capacity; i++) {
+    hashmap_entry_t* entry = &map->entries[i];
+    for (; entry != NULL; entry = entry->next) {
+      if (entry->key != NULL) {
+        apply_fn(entry->key, entry->value);
+      }
+    }
+  }
+}
