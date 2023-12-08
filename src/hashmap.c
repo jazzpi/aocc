@@ -65,15 +65,16 @@ void hashmap_set(hashmap_t* map, const void* key, const void* value) {
   hashmap_entry_t* entry = &map->entries[index];
   if (entry->key != NULL) {
     // Check (chained) entries for a match.
-    for (; entry != NULL; entry = entry->next) {
+    hashmap_entry_t* last = entry;
+    for (; entry != NULL; last = entry, entry = entry->next) {
       if (map->cmp_fn(entry->key, key) == 0) {
         entry->value = value;
         return;
       }
     }
     // Collision -- chain a new entry.
-    entry->next = malloc(sizeof(*entry->next));
-    entry = entry->next;
+    last->next = malloc(sizeof(*last->next));
+    entry = last->next;
   }
   entry->key = key;
   entry->value = value;

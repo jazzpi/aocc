@@ -75,7 +75,7 @@ TEST(HashmapTest, Removals) {
 size_t hash_ints_collisions(const void* key) { return *(const int*)key % 300; }
 
 TEST(HashmapTest, Collisions) {
-  hashmap_t* map = hashmap_create(hash_ints, cmp_ints);
+  hashmap_t* map = hashmap_create(hash_ints_collisions, cmp_ints);
 
   int keys[1000];
   char values[1000][10];
