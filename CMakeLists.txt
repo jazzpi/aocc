@@ -13,6 +13,7 @@ add_library(aocc
     src/util.c
     src/re.c
     src/dynarr.c
+    src/hashmap.c
     src/day1.c
     src/day2.c
     src/day3.c

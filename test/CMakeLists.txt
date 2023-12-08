@@ -20,6 +20,7 @@ link_libraries(aocc_testutil)
 include(GoogleTest)
 
 add_executable(test_util util.cpp)
+add_executable(test_hashmap hashmap.cpp)
 gtest_discover_tests(test_util)
 
 foreach(day RANGE 1 7)
