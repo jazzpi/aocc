@@ -10,7 +10,7 @@
 #define MAX_GREEN 13
 #define MAX_BLUE 14
 
-int day2_part1(const char** lines, size_t nlines) {
+long day2_part1(const char** lines, size_t nlines) {
   regex_t start_re;
   if (regcomp(&start_re, "Game ([0-9]+): ", REG_EXTENDED) != 0) {
     fprintf(stderr, "Failed to compile regex\n");
@@ -72,7 +72,7 @@ int day2_part1(const char** lines, size_t nlines) {
   return sum_ids;
 }
 
-int day2_part2(const char** lines, size_t nlines) {
+long day2_part2(const char** lines, size_t nlines) {
   regex_t start_re;
   if (regcomp(&start_re, "Game ([0-9]+): ", REG_EXTENDED) != 0) {
     fprintf(stderr, "Failed to compile regex\n");

@@ -78,7 +78,7 @@ void free_node(const void* key, void* nodeptr) {
   free(node);
 }
 
-int day8_part1(const char** lines, size_t nlines) {
+long day8_part1(const char** lines, size_t nlines) {
   assert(nlines > 2);
   instruction_arr* instructions = parse_instructions(lines[0]);
   assert(instructions->size > 0);

@@ -11,4 +11,4 @@ public:
   size_t nlines;
 };
 
-int get_solution(int day, int part);
+long get_solution(int day, int part);

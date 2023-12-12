@@ -92,7 +92,7 @@ part_no* find_part_numbers(const char** lines, size_t nlines, size_t* n_parts) {
   return dynarr_extract(numbers);
 }
 
-int day3_part1(const char** lines, size_t nlines) {
+long day3_part1(const char** lines, size_t nlines) {
   size_t n_parts;
   part_no* numbers = find_part_numbers(lines, nlines, &n_parts);
   size_t sum = 0;
@@ -115,7 +115,7 @@ part_no* part_at(size_t row, size_t col, part_no* parts, size_t n_parts) {
   return NULL;
 }
 
-int day3_part2(const char** lines, size_t nlines) {
+long day3_part2(const char** lines, size_t nlines) {
   size_t n_parts;
   part_no* parts = find_part_numbers(lines, nlines, &n_parts);
 

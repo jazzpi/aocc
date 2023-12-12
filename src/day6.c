@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int day6_part1(const char** lines, size_t nlines) {
+long day6_part1(const char** lines, size_t nlines) {
   const char* time_start = "Time: ";
   const char* dist_start = "Distance: ";
   assert(nlines == 2);
@@ -56,7 +56,7 @@ long parse_int_part2(const char* str) {
 
 long dist_travelled(long t_hold, long t) { return t_hold * (t - t_hold); }
 
-int day6_part2(const char** lines, size_t nlines) {
+long day6_part2(const char** lines, size_t nlines) {
   const char* time_start = "Time: ";
   const char* dist_start = "Distance: ";
   assert(nlines == 2);

@@ -10,12 +10,13 @@ InputFile::InputFile(const std::string& filename) {
 
 InputFile::~InputFile() { freelines(lines); }
 
-int get_solution(int day, int part) {
+long get_solution(int day, int part) {
   size_t nlines;
   const char** lines = readlines("../../input/solutions", &nlines);
   for (size_t i = 0; i < nlines; i++) {
-    int d, p, s;
-    assert(sscanf(lines[i], "%d %d %d", &d, &p, &s) == 3);
+    int d, p;
+    long s;
+    assert(sscanf(lines[i], "%d %d %ld", &d, &p, &s) == 3);
     if (d == day && p == part) {
       freelines(lines);
       return s;

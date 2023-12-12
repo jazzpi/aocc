@@ -75,7 +75,7 @@ int num_winning(card* c) {
   return n;
 }
 
-int day4_part1(const char** lines, size_t nlines) {
+long day4_part1(const char** lines, size_t nlines) {
   int sum = 0;
 
   for (size_t l = 0; l < nlines; l++) {
@@ -93,7 +93,7 @@ int day4_part1(const char** lines, size_t nlines) {
   return sum;
 }
 
-int day4_part2(const char** lines, size_t nlines) {
+long day4_part2(const char** lines, size_t nlines) {
   card* cards = malloc(sizeof(*cards) * nlines);
   int* card_insts = malloc(sizeof(*card_insts) * nlines);
 

@@ -234,12 +234,12 @@ int calc(const char** lines, size_t nlines) {
   return winnings;
 }
 
-int day7_part1(const char** lines, size_t nlines) {
+long day7_part1(const char** lines, size_t nlines) {
   j_mode = JACK;
   return calc(lines, nlines);
 }
 
-int day7_part2(const char** lines, size_t nlines) {
+long day7_part2(const char** lines, size_t nlines) {
   j_mode = JOKER;
   return calc(lines, nlines);
 }

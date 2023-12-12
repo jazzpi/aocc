@@ -71,7 +71,7 @@ long map_seed(long seed, map_t* map) {
   return seed;
 }
 
-int day5_part1(const char** lines, size_t nlines) {
+long day5_part1(const char** lines, size_t nlines) {
   static const char* seed_start = "seeds: ";
   assert(strncmp(lines[0], seed_start, strlen(seed_start)) == 0);
   size_t n_seeds;
@@ -171,7 +171,7 @@ range_arr* map_range(const range_t* range, const map_t* map) {
   return ranges;
 }
 
-int day5_part2(const char** lines, size_t nlines) {
+long day5_part2(const char** lines, size_t nlines) {
   static const char* seed_start = "seeds: ";
   assert(strncmp(lines[0], seed_start, strlen(seed_start)) == 0);
   size_t n_seeds;

@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int day1_part1(const char** lines, size_t nlines) {
+long day1_part1(const char** lines, size_t nlines) {
   int sum = 0;
   for (size_t l = 0; l < nlines; l++) {
     char d1 = 0;
@@ -57,7 +57,7 @@ int part2_digit(const char* digit_str) {
   exit(1);
 }
 
-int day1_part2(const char** lines, size_t nlines) {
+long day1_part2(const char** lines, size_t nlines) {
   regex_t re;
   if (regcomp(&re, "([0-9]|one|two|three|four|five|six|seven|eight|nine)",
               REG_EXTENDED) != 0) {

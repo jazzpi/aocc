@@ -6,8 +6,8 @@ extern "C" {
 
 #include <stddef.h>
 
-int day1_part1(const char** lines, size_t nlines);
-int day1_part2(const char** lines, size_t nlines);
+long day1_part1(const char** lines, size_t nlines);
+long day1_part2(const char** lines, size_t nlines);
 
 #ifdef __cplusplus
 }
