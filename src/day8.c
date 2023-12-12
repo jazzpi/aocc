@@ -2,8 +2,11 @@
 #include "dynarr.h"
 #include "hashmap.h"
 #include "re.h"
+#include "util.h"
 
 #include <assert.h>
+#include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -53,7 +56,7 @@ int cmp_names(const void* avoid, const void* bvoid) {
 node_t* parse_node(const char* line) {
   static regex_t re = {.re_nsub = 0};
   if (re.re_nsub == 0) {
-    re_compile(&re, "([A-Z]+) = \\(([A-Z]+), ([A-Z]+)\\)");
+    re_compile(&re, "([0-9A-Z]+) = \\(([0-9A-Z]+), ([0-9A-Z]+)\\)");
   }
   size_t nmatches;
   re_match_t* matches = re_match_all(&re, line, &nmatches, 0);
@@ -112,4 +115,78 @@ long day8_part1(const char** lines, size_t nlines) {
   dynarr_free(instructions);
 
   return steps;
+}
+
+typedef DYNARR(node_t*) node_arr;
+static node_arr* simul_nodes = NULL;
+
+static void find_simul_nodes(const void* key, void* value) {
+  const char* name = key;
+  if (name[strlen(name) - 1] != 'A') {
+    return;
+  }
+
+  if (simul_nodes == NULL) {
+    simul_nodes = dynarr_create(node_arr, 1);
+  }
+
+  node_t* node = value;
+  node_t** nptr = dynarr_incsize(simul_nodes);
+  *nptr = node;
+}
+
+static bool is_finished(const char* name) {
+  return name[strlen(name) - 1] == 'Z';
+}
+
+long day8_part2(const char** lines, size_t nlines) {
+  assert(nlines > 2);
+  instruction_arr* instructions = parse_instructions(lines[0]);
+  assert(instructions->size > 0);
+  assert(strlen(lines[1]) == 0);
+
+  hashmap_t* nodes = hashmap_create(hash_name, cmp_names);
+  for (size_t i = 2; i < nlines; i++) {
+    node_t* node = parse_node(lines[i]);
+    hashmap_set(nodes, node->name, node);
+  }
+
+  hashmap_foreach(nodes, find_simul_nodes);
+
+  printf("Simul nodes: %zu\n", simul_nodes->size);
+  long* steps = malloc(sizeof(long) * simul_nodes->size);
+
+  for (size_t i = 0; i < simul_nodes->size; i++) {
+    node_t* cur = simul_nodes->data[i];
+    const char* orig_name = cur->name;
+    size_t inst_idx = 0;
+    steps[i] = 0;
+    while (!is_finished(cur->name)) {
+      steps[i]++;
+      instruction_t inst = instructions->data[inst_idx];
+      switch (inst) {
+      case LEFT:
+        cur = (node_t*)hashmap_get(nodes, cur->left);
+        break;
+      case RIGHT:
+        cur = (node_t*)hashmap_get(nodes, cur->right);
+        break;
+      }
+      inst_idx = (inst_idx + 1) % instructions->size;
+    }
+    printf("Node %s: %ld\n", orig_name, steps[i]);
+  }
+
+  long result = steps[0];
+  for (size_t i = 1; i < simul_nodes->size; i++) {
+    result = lcm(result, steps[i]);
+  }
+
+  hashmap_foreach(nodes, free_node);
+  hashmap_free(nodes);
+  dynarr_free(instructions);
+  dynarr_free(simul_nodes);
+  free(steps);
+
+  return result;
 }

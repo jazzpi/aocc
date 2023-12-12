@@ -39,6 +39,9 @@ void freelines(const char** lines);
  */
 long* parse_ints(const char* str, size_t* n);
 
+long gcd(long a, long b);
+long lcm(long a, long b);
+
 #ifdef __cplusplus
 }
 #endif

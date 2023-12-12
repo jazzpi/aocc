@@ -90,3 +90,21 @@ long* parse_ints(const char* str, size_t* n) {
   *n = arr->size;
   return dynarr_extract(arr);
 }
+
+long gcd(long a, long b) {
+  if (a < b) {
+    long tmp = a;
+    a = b;
+    b = tmp;
+  }
+
+  while (b != 0) {
+    long rem = a % b;
+    a = b;
+    b = rem;
+  }
+
+  return a;
+}
+
+long lcm(long a, long b) { return labs(a) / gcd(a, b) * labs(b); }
