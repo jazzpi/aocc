@@ -1,4 +1,5 @@
 #include "day1.h"
+#include "day10.h"
 #include "day2.h"
 #include "day3.h"
 #include "day4.h"
@@ -24,7 +25,7 @@ static solver_t solvers[][2] = {
     {day3_part1, day3_part2}, {day4_part1, day4_part2},
     {day5_part1, day5_part2}, {day6_part1, day6_part2},
     {day7_part1, day7_part2}, {day8_part1, day8_part2},
-    {day9_part1, day9_part2},
+    {day9_part1, day9_part2}, {day10_part1, NULL},
 };
 
 int main(int argc, char** argv) {
