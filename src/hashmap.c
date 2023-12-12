@@ -44,10 +44,16 @@ void hashmap_rehash(hashmap_t* map, size_t new_capacity) {
 
   for (size_t i = 0; i < old_capacity; i++) {
     hashmap_entry_t* entry = &old_entries[i];
-    for (; entry != NULL; entry = entry->next) {
+    while (entry != NULL) {
+      hashmap_entry_t* next = entry->next;
       if (entry->key != NULL) {
         hashmap_set(map, entry->key, entry->value);
       }
+      if (entry != &old_entries[i]) {
+        // Chained entry, malloc'd separately -- free it.
+        free(entry);
+      }
+      entry = next;
     }
   }
   assert(map->size == old_size);
