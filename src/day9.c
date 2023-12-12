@@ -58,3 +58,33 @@ long day9_part1(const char** lines, size_t nlines) {
 
   return sum;
 }
+
+long day9_part2(const char** lines, size_t nlines) {
+  long sum = 0;
+  for (size_t l = 0; l < nlines; l++) {
+    size_t nseq;
+    long* seq = parse_ints(lines[l], &nseq);
+    long_arr* first_longs = dynarr_create(long_arr, 1);
+    dynarr_append(first_longs, &seq[0]);
+    while (!is_zero(seq, nseq)) {
+      assert(nseq > 0);
+      long* next = diff(seq, nseq);
+      free(seq);
+      seq = next;
+      nseq--;
+      dynarr_append(first_longs, &seq[0]);
+    }
+
+    assert(first_longs->data[first_longs->size - 1] == 0);
+    long n = 0;
+    for (ssize_t i = first_longs->size - 2; i >= 0; i--) {
+      n = first_longs->data[i] - n;
+    }
+    sum += n;
+
+    free(seq);
+    dynarr_free(first_longs);
+  }
+
+  return sum;
+}
