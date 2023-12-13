@@ -26,6 +26,7 @@ add_library(aocc
     src/day10.c
     src/day11.c
     src/day12.c
+    src/day13.c
 )
 target_link_libraries(aocc m)
 
