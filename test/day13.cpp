@@ -15,14 +15,14 @@ TEST(Day13Test, Part1Input) {
   EXPECT_EQ(result, get_solution(13, 1));
 }
 
-// TEST(Day13Test, Part2Example) {
-//   InputFile in("day13_ex");
-//   long result = day13_part2(in.lines, in.nlines);
-//   EXPECT_EQ(result, 525152);
-// }
+TEST(Day13Test, Part2Example) {
+  InputFile in("day13_ex");
+  long result = day13_part2(in.lines, in.nlines);
+  EXPECT_EQ(result, 400);
+}
 
-// TEST(Day13Test, Part2Input) {
-//   InputFile in("day13");
-//   long result = day13_part2(in.lines, in.nlines);
-//   EXPECT_EQ(result, get_solution(13, 2));
-// }
+TEST(Day13Test, Part2Input) {
+  InputFile in("day13");
+  long result = day13_part2(in.lines, in.nlines);
+  EXPECT_EQ(result, get_solution(13, 2));
+}
