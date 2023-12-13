@@ -103,6 +103,10 @@ const void* hashmap_get(hashmap_t* map, const void* key) {
   return NULL;
 }
 
+bool hashmap_has(hashmap_t* map, const void* key) {
+  return hashmap_get(map, key) != NULL;
+}
+
 void hashmap_remove(hashmap_t* map, const void* key) {
   size_t hash = map->hash_fn(key);
   size_t index = hash % map->capacity;

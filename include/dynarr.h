@@ -82,6 +82,12 @@ void* dynarr_extract_handle(dynarr_handle_t* arr);
 #define dynarr_extract(ARR)                                                    \
   (typeof(ARR->data))dynarr_extract_handle((dynarr_handle_t*)ARR)
 
+/**
+ * Duplicate an array.
+ */
+void* dynarr_dup_handle(const dynarr_handle_t* arr);
+#define dynarr_dup(ARR) (typeof(ARR))dynarr_dup_handle((dynarr_handle_t*)ARR)
+
 #ifdef __cplusplus
 }
 #endif

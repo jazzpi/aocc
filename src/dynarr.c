@@ -55,3 +55,9 @@ void* dynarr_extract_handle(dynarr_handle_t* arr) {
   free(arr);
   return data;
 }
+
+void* dynarr_dup_handle(const dynarr_handle_t* arr) {
+  dynarr_handle_t* dup = dynarr_create_handle(arr->data_size, arr->size);
+  dynarr_extend_handle(dup, arr);
+  return dup;
+}

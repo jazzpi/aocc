@@ -42,6 +42,8 @@ long* parse_ints(const char* str, size_t* n);
 long gcd(long a, long b);
 long lcm(long a, long b);
 
+size_t diffabs(size_t a, size_t b);
+
 #ifdef __cplusplus
 }
 #endif

@@ -108,3 +108,5 @@ long gcd(long a, long b) {
 }
 
 long lcm(long a, long b) { return labs(a) / gcd(a, b) * labs(b); }
+
+size_t diffabs(size_t a, size_t b) { return (a > b) ? a - b : b - a; }
