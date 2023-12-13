@@ -39,6 +39,20 @@ void freelines(const char** lines);
  */
 long* parse_ints(const char* str, size_t* n);
 
+/**
+ * Parse a separated list of integers.
+ *
+ * The integers may only be separated by one separator.
+ *
+ * @param str The string to parse.
+ * @param n The number of integers parsed is written to this pointer.
+ * @param sep The separators to use (see strtok()).
+ *
+ * @return An array of integers. NULL if no integers were read. Must be freed
+ * with free() otherwise.
+ */
+long* parse_ints_sep(const char* str, size_t* n, const char* sep);
+
 long gcd(long a, long b);
 long lcm(long a, long b);
 

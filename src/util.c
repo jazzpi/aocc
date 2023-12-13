@@ -91,6 +91,23 @@ long* parse_ints(const char* str, size_t* n) {
   return dynarr_extract(arr);
 }
 
+long* parse_ints_sep(const char* str, size_t* n, const char* sep) {
+  long_arr* arr = dynarr_create(long_arr, 1);
+  char* str_dup = strdup(str);
+  char* ptr = strtok(str_dup, sep);
+  errno = 0;
+  while (ptr != NULL) {
+    long num = strtol(ptr, NULL, 10);
+    assert(errno == 0);
+    ptr = strtok(NULL, sep);
+    dynarr_append(arr, &num);
+  }
+
+  free(str_dup);
+  *n = arr->size;
+  return dynarr_extract(arr);
+}
+
 long gcd(long a, long b) {
   if (a < b) {
     long tmp = a;
