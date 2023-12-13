@@ -186,6 +186,7 @@ long day8_part2(const char** lines, size_t nlines) {
   hashmap_free(nodes);
   dynarr_free(instructions);
   dynarr_free(simul_nodes);
+  simul_nodes = NULL;
   free(steps);
 
   return result;
