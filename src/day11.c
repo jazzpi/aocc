@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+size_t expansion_factor_part2 = 1000000;
+
 typedef struct {
   size_t row;
   size_t col;
@@ -87,7 +89,7 @@ void print_universe(const universe_t* universe) {
   free(grid);
 }
 
-void expand_universe(universe_t* universe) {
+void expand_universe(universe_t* universe, size_t expansion_factor) {
   bool occupied_rows[universe->height];
   bool occupied_cols[universe->width];
   memset(occupied_rows, 0, sizeof(occupied_rows));
@@ -98,15 +100,17 @@ void expand_universe(universe_t* universe) {
     occupied_cols[coord->col] = true;
   }
 
+  size_t expansion = expansion_factor - 1;
+
   coord_arr* new_galaxies = dynarr_dup(universe->galaxies);
   size_t new_height = universe->height;
   for (size_t row = 0; row < universe->height; row++) {
     if (!occupied_rows[row]) {
       printf("Expanding row %zu\n", row);
-      new_height++;
+      new_height += expansion;
       for (size_t i = 0; i < universe->galaxies->size; i++) {
         if (universe->galaxies->data[i].row > row) {
-          new_galaxies->data[i].row++;
+          new_galaxies->data[i].row += expansion;
         }
       }
     }
@@ -116,10 +120,10 @@ void expand_universe(universe_t* universe) {
   for (size_t col = 0; col < universe->width; col++) {
     if (!occupied_cols[col]) {
       printf("Expanding col %zu\n", col);
-      new_width++;
+      new_width += expansion;
       for (size_t i = 0; i < universe->galaxies->size; i++) {
         if (universe->galaxies->data[i].col > col) {
-          new_galaxies->data[i].col++;
+          new_galaxies->data[i].col += expansion;
         }
       }
     }
@@ -148,7 +152,31 @@ long day11_part1(const char** lines, size_t nlines) {
   universe_t* universe = parse_universe(lines, nlines);
   // printf("Initial universe:\n");
   // print_universe(universe);
-  expand_universe(universe);
+  expand_universe(universe, 2);
+  // printf("\nAfter expansion:\n");
+  // print_universe(universe);
+  size_t** distances = bfs_pairwise(universe);
+  // printf("\nDistances:\n");
+  long result = 0;
+  for (size_t i = 0; i < universe->galaxies->size; i++) {
+    for (size_t j = i + 1; j < universe->galaxies->size; j++) {
+      // printf("[%3zu, %3zu] %zu\n", i, j, distances[i][j]);
+      result += distances[i][j];
+    }
+    free(distances[i]);
+  }
+
+  free(distances);
+  free_universe(universe);
+
+  return result;
+}
+
+long day11_part2(const char** lines, size_t nlines) {
+  universe_t* universe = parse_universe(lines, nlines);
+  // printf("Initial universe:\n");
+  // print_universe(universe);
+  expand_universe(universe, expansion_factor_part2);
   // printf("\nAfter expansion:\n");
   // print_universe(universe);
   size_t** distances = bfs_pairwise(universe);
