@@ -23,7 +23,7 @@ add_executable(test_util util.cpp)
 add_executable(test_hashmap hashmap.cpp)
 gtest_discover_tests(test_util)
 
-foreach(day RANGE 1 13)
+foreach(day RANGE 1 14)
     add_executable(test_day${day} day${day}.cpp)
     gtest_discover_tests(test_day${day})
 endforeach()
