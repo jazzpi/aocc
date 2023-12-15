@@ -108,6 +108,22 @@ long* parse_ints_sep(const char* str, size_t* n, const char* sep) {
   return dynarr_extract(arr);
 }
 
+typedef DYNARR(char*) str_arr;
+char** split_str(const char* str, size_t* n, const char* sep) {
+  str_arr* arr = dynarr_create(str_arr, 1);
+  char* str_dup = strdup(str);
+  char* ptr = strtok(str_dup, sep);
+  while (ptr != NULL) {
+    dynarr_append(arr, &ptr);
+    ptr = strtok(NULL, sep);
+  }
+
+  assert(arr->size > 0);
+  // DON'T free(str_dup) because the pointers in arr point into str_dup.
+  *n = arr->size;
+  return dynarr_extract(arr);
+}
+
 long gcd(long a, long b) {
   if (a < b) {
     long tmp = a;

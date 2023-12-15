@@ -9,25 +9,18 @@ include_directories(include)
 
 add_subdirectory(test)
 
+set(day_list)
+
+foreach(day RANGE 1 15)
+    list(APPEND day_list src/day${day}.c)
+endforeach()
+
 add_library(aocc
     src/util.c
     src/re.c
     src/dynarr.c
     src/hashmap.c
-    src/day1.c
-    src/day2.c
-    src/day3.c
-    src/day4.c
-    src/day5.c
-    src/day6.c
-    src/day7.c
-    src/day8.c
-    src/day9.c
-    src/day10.c
-    src/day11.c
-    src/day12.c
-    src/day13.c
-    src/day14.c
+    ${day_list}
 )
 target_link_libraries(aocc m)
 

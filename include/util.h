@@ -53,6 +53,15 @@ long* parse_ints(const char* str, size_t* n);
  */
 long* parse_ints_sep(const char* str, size_t* n, const char* sep);
 
+/**
+ * Split a string into substrings.
+ *
+ * @param str The string to split.
+ * @param n The number of substrings is written to this pointer.
+ * @param sep The separator to use (see strtok()).
+ */
+char** split_str(const char* str, size_t* n, const char* sep);
+
 long gcd(long a, long b);
 long lcm(long a, long b);
 
