@@ -33,7 +33,7 @@ static solver_t solvers[][2] = {
     {day9_part1, day9_part2},   {day10_part1, day10_part2},
     {day11_part1, day11_part2}, {day12_part1, day12_part2},
     {day13_part1, day13_part2}, {day14_part1, day14_part2},
-    {day15_part1, NULL},
+    {day15_part1, day15_part2},
 };
 
 int main(int argc, char** argv) {
